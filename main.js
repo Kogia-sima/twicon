@@ -1,18 +1,30 @@
-const scraperjs = require('scraperjs');
+const https = require('https');
+const parser = require('node-html-parser');
 const Twitter = require('twitter');
 
 function fetch(num) {
   const url = "https://github.com/Kogia-sima";
 
   return new Promise((resolve) => {
-    scraperjs.StaticScraper.create(url).scrape(($) => {
-      const rects = $("svg.js-calendar-graph-svg > g rect").slice(-num);
+    https.get(url, (res) => {
+      let body = "";
+      res.setEncoding("utf8");
 
-      const counts = Array.prototype.map.call(rects, (v) => {
-        return $(v).attr("data-count");
+      res.on("data", (chunk) => {
+        body += chunk;
       });
 
-      resolve(counts.reverse());
+      res.on("end", () => {
+        const html = parser.parse(body);
+        const rects = html.querySelectorAll("svg.js-calendar-graph-svg g rect").slice(-num);
+        const counts = Array.prototype.map.call(rects, (v) => {
+          return v.attributes['data-count'];
+        });
+        resolve(counts.reverse());
+      });
+    }).on("error", (e) => {
+      console.log(e);
+      resolve(null);
     });
   });
 }
