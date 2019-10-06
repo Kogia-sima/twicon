@@ -2,6 +2,11 @@ const https = require('https');
 const parser = require('node-html-parser');
 const Twitter = require('twitter');
 
+/**
+ * GitHubのプロフィールページから直近num日のContribution数を取得する
+ * @param {Number} num Contribution数を取得する日数
+ * @return {Array} 直近num日のContribution数。日付降順
+ */
 function fetch(num) {
   const url = "https://github.com/Kogia-sima";
 
@@ -29,6 +34,11 @@ function fetch(num) {
   });
 }
 
+/**
+ * 指定された文字列をツイートする
+ * @param {String} content ツイートする内容
+ * @param {Object} settings Twitter API の認証情報
+ */
 function post(content, settings) {
   const client = new Twitter(settings);
   const params = {"status": content};
@@ -44,6 +54,9 @@ function post(content, settings) {
   });
 }
 
+/**
+ * エントリポイント
+ */
 async function main(params) {
   try {
     const counts = await fetch(2);
