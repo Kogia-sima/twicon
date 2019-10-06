@@ -46,15 +46,14 @@ function post(content, settings) {
 
 async function main(params) {
   try {
-    const counts = await fetch(3);
+    const counts = await fetch(2);
 
     const content = [
       "*** Contribution Report ***",
-      "===========================",
+      "",
       "Today's contribution: " + counts[0],
-      "Yesterday: " + counts[1],
-      "Yesterday: " + counts[2]
-    ].join("\n");;
+      "Yesterday: " + counts[1]
+    ].join("\n");
     console.log(content);
 
     const api_settings = {
