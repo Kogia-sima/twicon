@@ -8,7 +8,7 @@
   "main": "main.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "deploy": "ibmcloud fn action update twicon-post dist/bundle.js --kind nodejs:10"
+    "deploy": "yarn build && ibmcloud fn action update twicon-post dist/bundle.js --kind nodejs:10"
   },
   "dependencies": {
     "node-html-parser": "^1.1.16",
