@@ -11,6 +11,8 @@
     "deploy": "yarn build && ibmcloud fn action update twicon-post dist/bundle.js --kind nodejs:10"
   },
   "dependencies": {
+    "chart.js": "2.7.3",
+    "chartjs-node": "^1.7.1",
     "node-html-parser": "^1.1.16",
     "twitter": "^1.7.1"
   },
