@@ -39,19 +39,11 @@ function fetch(num) {
  * @param {String} content ツイートする内容
  * @param {Object} settings Twitter API の認証情報
  */
-function post(content, settings) {
+async function post(content, settings) {
   const client = new Twitter(settings);
   const params = {"status": content};
   console.log(params);
-  return new Promise((resolve) => {
-    client.post('statuses/update', params, (err, tweet, response) => {
-      if (err) {
-        resolve(err);
-      } else {
-        resolve(response);
-      }
-    });
-  });
+  return await client.post('statuses/update', params);
 }
 
 /**
