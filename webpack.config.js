@@ -11,14 +11,6 @@ module.exports = {
     libraryTarget: 'global'
   },
   target: 'node',
-  module: {
-    rules: [
-      {
-        test: /\.node$/,
-        use: 'node-loader'
-      }
-    ]
-  },
   plugins: [
     new HardSourceWebpackPlugin()
   ]

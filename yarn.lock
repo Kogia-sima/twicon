@@ -2205,11 +2205,6 @@ node-libs-browser@^2.2.1:
     util "^0.11.0"
     vm-browserify "^1.0.1"
 
-node-loader@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/node-loader/-/node-loader-0.6.0.tgz#c797ef51095ed5859902b157f6384f6361e05ae8"
-  integrity sha1-x5fvUQle1YWZArFX9jhPY2HgWug=
-
 node-object-hash@^1.2.0:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/node-object-hash/-/node-object-hash-1.4.2.tgz#385833d85b229902b75826224f6077be969a9e94"
