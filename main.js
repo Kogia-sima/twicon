@@ -1,81 +1,6 @@
-const fs = require('fs');
-const ChartjsNode = require('chartjs-node');
 const https = require('https');
 const parser = require('node-html-parser');
 const Twitter = require('twitter');
-
-const backgroundFixPlugin = {
-  beforeDraw: function (chart, easing, options) {
-    var ctx = chart.chart.ctx;
-    ctx.save();
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, chart.width, chart.height);
-    ctx.restore();
-  }
-};
-
-function getChartConfig(data, labels) {
-  return {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: 'GitHub Contribution',
-          data: data,
-          borderColor: "rgba(75,192,192,1)",
-          backgroundColor: "rgba(75,192,192,0.2)"
-        }
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Daily Contributions'
-      },
-      legend: {
-        display: false
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      },
-    },
-    plugins: [backgroundFixPlugin]
-  }
-}
-
-async function drawChart(data, labels) {
-  const chart = new ChartjsNode(600, 400);
-  const chartConfig = getChartConfig(
-    data,
-    getRecentDays(7)
-  );
-
-  await chart.drawChart(chartConfig);
-  return await chart.getImageBuffer('image/jpeg');
-}
-
-function formatDate(date) {
-  return (date.getMonth() + 1) + '/' + date.getDate();
-}
-
-function getRecentDays(num) {
-  const baseDate = new Date();
-  baseDate.setDate(baseDate.getDate() - num + 1);
-  const dates = [formatDate(baseDate)];
-
-  for (let i = 1; i < num; ++i) {
-    const date = new Date(baseDate.getTime());
-    date.setDate(date.getDate() + i);
-    dates.push(formatDate(date));
-  }
-
-  return dates;
-}
 
 /**
  * GitHubのプロフィールページから直近num日のContribution数を取得する
@@ -121,26 +46,12 @@ async function post(content, settings) {
   return await client.post('statuses/update', params);
 }
 
-async function postWithMedia(content, buffer, settings) {
-  const client = new Twitter(settings);
-  const media = await client.post('media/upload', {media: buffer});
-  const params = {
-    'status': content,
-    'media_ids': media.media_id_string
-  };
-  console.log(params);
-  return await client.post('statuses/update', params);
-}
-
 /**
  * エントリポイント
  */
 async function main(params) {
   try {
-    const counts = await fetch(7);
-    const labels = getRecentDays(7);
-    const buffer = await drawChart(counts, labels);
-    fs.writeFileSync('testimage.jpg', buffer);
+    const counts = await fetch(2);
 
     const content = [
       "*** Contribution Report ***",
@@ -156,8 +67,8 @@ async function main(params) {
       access_token_key: params.access_token_key,
       access_token_secret: params.access_token_secret
     };
-    const tweet = await postWithMedia(content, buffer, api_settings);
-    console.log(tweet);
+    const response = await post(content, api_settings);
+    console.log(response);
   } catch (err) {
     console.log(err);
     return err;
